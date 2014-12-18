@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="useProxy"
+        android:summary="Check this for using proxy"
+        android:title="Use Proxy" />
+    <EditTextPreference
+        android:dependency="useProxy"
+        android:defaultValue="127.0.0.1"
+        android:key="proxyAddress"
+        android:maxLines="1"
+        android:title="Proxy IP Address" />
+    <EditTextPreference
+        android:dependency="useProxy"
+        android:defaultValue="8000"
+        android:key="proxyPort"
+        android:maxLines="1"
+        android:title="Proxy Port Number" />
+
+</PreferenceScreen>
