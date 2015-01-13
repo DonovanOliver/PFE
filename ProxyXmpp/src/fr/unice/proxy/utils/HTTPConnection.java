@@ -6,10 +6,9 @@ import java.net.URL;
 import java.net.URLConnection;
 
 /**
- * class 
- * @author 
+ * @author Luis Delgado (@ldelgadoj)
+ * @version 1.0 (11/07/2012)
  */
-
 public class HTTPConnection {
 
     public static String get(String sUrl) {
@@ -25,7 +24,7 @@ public class HTTPConnection {
             }
         } catch (Exception ex) {
             System.err.println("[HTTPConnection > GET] " +
-                    "Exception " + ex + " launched");
+                    "Exception " + ex.getClass().getSimpleName() + " launched");
         } finally {
             return response;
         }

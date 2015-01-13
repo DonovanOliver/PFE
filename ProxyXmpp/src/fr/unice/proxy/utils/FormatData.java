@@ -1,10 +1,9 @@
 package fr.unice.proxy.utils;
 
 /**
- * class 
- * @author 
+ * @author Luis Delgado (@ldelgadoj)
+ * @version 1.0 (11/07/2012)
  */
-
 public class FormatData {
 
     public static String format(String cadena, String searchBegin, String searchEnd) {

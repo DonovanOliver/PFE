@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <EditTextPreference
+        android:defaultValue="8000"
+        android:key="pcPort"
+        android:maxLines="1"
+        android:title="HTTP Listening Port" />
+    
+    <EditTextPreference
+        android:defaultValue="8001"
+        android:key="psPort"
+        android:maxLines="1"
+        android:title="Proxy Listening Port" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="isInitiator"
+        android:summary="Check this if you are the initiator if connexion"
+        android:title="Initiate Secure Connexion" />
+
+</PreferenceScreen>
