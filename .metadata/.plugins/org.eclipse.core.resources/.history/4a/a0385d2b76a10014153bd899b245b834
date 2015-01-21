@@ -23,13 +23,13 @@
         android:text="@string/Hangouts" />
 
     <Button
-        android:id="@+id/btnBrowser"
+        android:id="@+id/btnWhatsApp"
         style="@style/btnStyleMainActivity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="10dp"
-        android:text="@string/Browser" />
+        android:text="@string/WhatsApp" />
 
     <Button
         android:id="@+id/btnFacebook"

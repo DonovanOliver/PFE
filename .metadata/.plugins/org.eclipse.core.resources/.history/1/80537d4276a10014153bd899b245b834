@@ -52,7 +52,7 @@ public class AppActivity extends Activity {
 		});
 
 		// When the btnIntermediate button is clicked
-		btnBrowser.setOnClickListener(new OnClickListener() {
+		btnWhatsApp.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {

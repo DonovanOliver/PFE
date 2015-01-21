@@ -19,7 +19,7 @@ import fr.unice.apptest.webserver.ContextManager;
  */
 public class AppActivity extends Activity {
 
-	Button btnHangouts, btnBrowser, btnFacebook, btnHTTP, btnExit;
+	Button btnHangouts, btnWhatsApp, btnFacebook, btnHTTP, btnExit;
 
 	/**
 	 * This is the first method that is called when the Activity starts.
@@ -52,7 +52,7 @@ public class AppActivity extends Activity {
 		});
 
 		// When the btnIntermediate button is clicked
-		btnBrowser.setOnClickListener(new OnClickListener() {
+		btnWhatsApp.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {

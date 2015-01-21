@@ -88,6 +88,5 @@
         <string name="WhatsApp">WhatsApp</string>
         <string name="Facebook">Facebook</string>
         <string name="HTTP">HTTP</string>
-        <string name="Browser">Browser</string>
 
 </resources>

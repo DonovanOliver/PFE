@@ -3,6 +3,8 @@ package fr.unice.apptest.activities;
 import java.io.File;
 import java.io.IOException;
 
+
+
 import fr.unice.apptest.R;
 import fr.unice.apptest.api.SecureRequest;
 import fr.unice.apptest.webserver.WebServerService;
@@ -29,18 +31,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 
 /**
  * This Activity is responsible with taking the data from the forms and sending
- * it along with the Security Properties, and their respective algorithms that
- * were selected.
+ * it along with the Security Properties that were selected.
  * 
  * @author andrei
  */
-public class AdvancedActivity extends Activity {
+public class IntermediateActivity extends Activity {
 
 	// UI View references
 	private View statusView, formView, textTypeView, fileTypeView, destinationManualView, destinationAutomaticView;
@@ -53,9 +53,6 @@ public class AdvancedActivity extends Activity {
 	private CheckBox chkConfidentiality, chkAuthenticity, chkIntegrity,
 			chkNonRepudiation;
 
-	private Spinner spinnerConfidentialityAlgorithms,
-			spinnerAuthenticityAlgorithms, spinnerIntegrityAlgorithms;
-
 	private Button btnSend, btnSelectFile, btnAutomatic;
 
 	private TextView tvFilePath;
@@ -65,7 +62,7 @@ public class AdvancedActivity extends Activity {
 	private ImageView ivSecurity, ivConsumption, ivOverall;
 	
 	private Documents documents;
-
+	
 	private XML xml;
 
 	/**
@@ -78,12 +75,12 @@ public class AdvancedActivity extends Activity {
 	
 	private int state=0;
 	
-	String[] states={"Hangouts","Browser","Facebook","HTTP"};
+	String[] states={"Hangouts","WhatsApp","Facebook","HTTP"};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_advanced);
+		setContentView(R.layout.activity_intermediate);
 		
 		documents=new Documents(this);
 		
@@ -91,8 +88,8 @@ public class AdvancedActivity extends Activity {
 		
 		xml=new XML(documents,"data.xml");
 		xml.addGetChild(states[state]);
-		if(!xml.isChild("advanced")){
-			xml.addGetChild("advanced");
+		if(!xml.isChild("intermediate")){
+			xml.addGetChild("intermediate");
 			xml.add("ip","127.0.0.1");
 			xml.add("port","8002");
 			xml.add("target","0");
@@ -103,42 +100,36 @@ public class AdvancedActivity extends Activity {
 			xml.add("non-repudiation","false");
 		}
 		else{
-			xml.addGetChild("advanced");
+			xml.addGetChild("intermediate");
 		}
-		
 		
 		// Get a Shared Preferences instance to get the user preferences
 		prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
 		// Add references to the 2 main Views
-		statusView = findViewById(R.id.view_status_Advanced);
-		formView = findViewById(R.id.view_form_Advanced);
+		statusView = findViewById(R.id.view_status_Intermediate);
+		formView = findViewById(R.id.view_form_Intermediate);
 
 		// Add references to the file and text Views
-		textTypeView = findViewById(R.id.view_Text_Type_Advanced);
-		fileTypeView = findViewById(R.id.view_File_Type_Advanced);
+		textTypeView = findViewById(R.id.view_Text_Type_Intermediate);
+		fileTypeView = findViewById(R.id.view_File_Type_Intermediate);
 		
 		// Add references to the destination type Views
-		destinationManualView = findViewById(R.id.view_Destination_Manual_Advanced);
-		destinationAutomaticView = findViewById(R.id.view_Destination_Automatic_Advanced);
+		destinationManualView = findViewById(R.id.view_Destination_Manual_Intermediate);
+		destinationAutomaticView = findViewById(R.id.view_Destination_Automatic_Intermediate);
 
 		// References to the progress bar from within the statusView
-		progressBar = (ProgressBar) findViewById(R.id.progressBarAdvanced);
+		progressBar = (ProgressBar) findViewById(R.id.progressBarIntermediate);
 
 		// References to views from within the formView
-		edtData = (EditText) findViewById(R.id.edtDataAdvanced);
+		edtData = (EditText) findViewById(R.id.edtDataIntermediate);
 		edtData.setText(xml.getValue("text"));
 		if(state!=3){edtData.setVisibility(View.GONE);}
-		chkConfidentiality = (CheckBox) findViewById(R.id.chkConfidentialityAdvanced);
-		chkAuthenticity = (CheckBox) findViewById(R.id.chkAuthenticityAdvanced);
-		chkIntegrity = (CheckBox) findViewById(R.id.chkIntegrityAdvanced);
-		chkNonRepudiation = (CheckBox) findViewById(R.id.chkNonRepudiationAdvanced);
-		spinnerConfidentialityAlgorithms = (Spinner) findViewById(R.id.spConfidentialityAlgorithmsAdvanced);
-		spinnerAuthenticityAlgorithms = (Spinner) findViewById(R.id.spAuthenticityAlgorithmsAdvanced);
-		spinnerIntegrityAlgorithms = (Spinner) findViewById(R.id.spIntegrityAlgorithmsAdvanced);
-		btnSend = (Button) findViewById(R.id.btnSendAdvanced);
-		if(state!=3){btnSend.setText("Save");} 
-		
+		chkConfidentiality = (CheckBox) findViewById(R.id.chkConfidentialityIntermediate);
+		chkAuthenticity = (CheckBox) findViewById(R.id.chkAuthenticityIntermediate);
+		chkIntegrity = (CheckBox) findViewById(R.id.chkIntegrityIntermediate);
+		chkNonRepudiation = (CheckBox) findViewById(R.id.chkNonRepudiationIntermediate);
+
 		if(xml.getValue("confidentiality").equals("true")){
 			chkConfidentiality.setChecked(true);
 		}
@@ -152,57 +143,60 @@ public class AdvancedActivity extends Activity {
 			chkNonRepudiation.setChecked(true);
 		}
 		
-		btnAutomatic = (Button) findViewById(R.id.btnAutomaticAdvanced);
-		edtDestinationIP = (EditText) findViewById(R.id.edtDestinationIPAdvanced);
+		btnSend = (Button) findViewById(R.id.btnSendIntermediate);
+		if(state!=3){btnSend.setText("Save");}
+		
+		btnAutomatic = (Button) findViewById(R.id.btnAutomaticIntermediate);
+		edtDestinationIP = (EditText) findViewById(R.id.edtDestinationIPIntermediate);
 		edtDestinationIP.setText(xml.getValue("ip"));
 		if(state!=3){edtDestinationIP.setVisibility(View.GONE);}
-		edtDestinationPort = (EditText) findViewById(R.id.edtDestinationPortAdvanced);
+		edtDestinationPort = (EditText) findViewById(R.id.edtDestinationPortIntermediate);
 		edtDestinationPort.setText(xml.getValue("port"));
 		if(state!=3){edtDestinationPort.setVisibility(View.GONE);}
+		
+		// References to fileTypeViewIntermediate
+		btnSelectFile = (Button) findViewById(R.id.btnSelectFileIntermediate);
+		tvFilePath = (TextView) findViewById(R.id.tvFilePathIntermediate);
 
-		// References to fileTypeViewAdvanced
-		btnSelectFile = (Button) findViewById(R.id.btnSelectFileAdvanced);
-		tvFilePath = (TextView) findViewById(R.id.tvFilePathAdvanced);
-
-		rgDataType = (RadioGroup) findViewById(R.id.rgDataTypeAdvanced);
+		rgDataType = (RadioGroup) findViewById(R.id.rgDataTypeIntermediate);
 		if(state!=3){rgDataType.setVisibility(View.GONE);}
-		rgDestinationMode = (RadioGroup) findViewById(R.id.rgDestinationEnterModeAdvanced);
+		rgDestinationMode = (RadioGroup) findViewById(R.id.rgDestinationEnterModeIntermediate);
+		rgDestinationMode.setId(xml.getInt("target"));
 		if(state!=3){rgDestinationMode.setVisibility(View.GONE);}
 
-		ivSecurity = (ImageView) findViewById(R.id.ivSecurityAdvanced);
-		ivConsumption = (ImageView) findViewById(R.id.ivConsumptionAdvanced);
-		ivOverall = (ImageView) findViewById(R.id.ivOverallAdvanced);
+		ivSecurity = (ImageView) findViewById(R.id.ivSecurityIntermediate);
+		ivConsumption = (ImageView) findViewById(R.id.ivConsumptionIntermediate);
+		ivOverall = (ImageView) findViewById(R.id.ivOverallIntermediate);
 
 		informUser();
 
 		// We set a CheckedChangeListener on the RadioGroup
-		rgDataType
-				.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+		rgDataType.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-					@Override
-					public void onCheckedChanged(RadioGroup group, int checkedId) {
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-						// When the text type has been selected, show the text
-						// correspondent view
-						// When the file type has been selected, show the file
-						// correspondent view
+				// When the text type has been selected, show the text
+				// correspondent view
+				// When the file type has been selected, show the file
+				// correspondent view
 
-						switch (group.getCheckedRadioButtonId()) {
-						case R.id.typeTextAdvanced:
-							textTypeView.setVisibility(View.VISIBLE);
-							fileTypeView.setVisibility(View.GONE);
-							break;
+				switch (group.getCheckedRadioButtonId()) {
+				case R.id.typeTextIntermediate:
+					textTypeView.setVisibility(View.VISIBLE);
+					fileTypeView.setVisibility(View.GONE);
+					break;
 
-						case R.id.typeFileAdvanced:
-							textTypeView.setVisibility(View.GONE);
-							fileTypeView.setVisibility(View.VISIBLE);
-							break;
+				case R.id.typeFileIntermediate:
+					textTypeView.setVisibility(View.GONE);
+					fileTypeView.setVisibility(View.VISIBLE);
+					break;
 
-						default:
-							break;
-						}
-					}
-				});
+				default:
+					break;
+				}
+			}
+		});
 		
 		// We set a CheckedChangeListener on the RadioGroup
 		rgDestinationMode.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -214,12 +208,12 @@ public class AdvancedActivity extends Activity {
 				// When the Automatic type has been selected, show the  correspondent view
 
 				switch (group.getCheckedRadioButtonId()) {
-				case R.id.typeManualAdvanced:
+				case R.id.typeManualIntermediate:
 					destinationManualView.setVisibility(View.VISIBLE);
 					destinationAutomaticView.setVisibility(View.GONE);
 					break;
 
-				case R.id.typeAutomaticAdvanced:
+				case R.id.typeAutomaticIntermediate:
 					destinationAutomaticView.setVisibility(View.VISIBLE);
 					destinationManualView.setVisibility(View.GONE);
 					break;
@@ -268,6 +262,7 @@ public class AdvancedActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
+				
 				xml.setValue("ip", edtDestinationIP.getText().toString());
 				xml.setValue("port", edtDestinationPort.getText().toString());
 				xml.setValue("text", edtData.getText().toString());
@@ -278,6 +273,7 @@ public class AdvancedActivity extends Activity {
 				
 				Log.i("data",xml.toData());
 				xml.save();
+			
 				if(state==3){attemptSend();}
 
 			}
@@ -290,14 +286,6 @@ public class AdvancedActivity extends Activity {
 					public void onCheckedChanged(CompoundButton buttonView,
 							boolean isChecked) {
 						informUser();
-						if (isChecked) {
-							spinnerConfidentialityAlgorithms
-									.setVisibility(View.VISIBLE);
-						} else {
-							spinnerConfidentialityAlgorithms
-									.setVisibility(View.GONE);
-						}
-
 					}
 				});
 
@@ -308,14 +296,6 @@ public class AdvancedActivity extends Activity {
 					public void onCheckedChanged(CompoundButton buttonView,
 							boolean isChecked) {
 						informUser();
-						if (isChecked) {
-							spinnerAuthenticityAlgorithms
-									.setVisibility(View.VISIBLE);
-						} else {
-							spinnerAuthenticityAlgorithms
-									.setVisibility(View.GONE);
-						}
-
 					}
 				});
 
@@ -326,13 +306,6 @@ public class AdvancedActivity extends Activity {
 					public void onCheckedChanged(CompoundButton buttonView,
 							boolean isChecked) {
 						informUser();
-						if (isChecked) {
-							spinnerIntegrityAlgorithms
-									.setVisibility(View.VISIBLE);
-						} else {
-							spinnerIntegrityAlgorithms.setVisibility(View.GONE);
-						}
-
 					}
 				});
 
@@ -357,20 +330,6 @@ public class AdvancedActivity extends Activity {
 				tvFilePath.setText(uri.getPath());
 			} else {
 				tvFilePath.setText("");
-			}
-			break;
-			
-		case ACTIVITY_SELECT_CONTACT:
-			if (resultCode == RESULT_OK) {
-				/*
-				 * This is to be implemented later
-				 */
-				Toast.makeText(getBaseContext(), getString(R.string.error_not_implemented), Toast.LENGTH_LONG).show();
-			} else {
-				/*
-				 * This is to be implemented later
-				 */
-				Toast.makeText(getBaseContext(), getString(R.string.error_not_implemented), Toast.LENGTH_LONG).show();
 			}
 			break;
 		}
@@ -419,9 +378,9 @@ public class AdvancedActivity extends Activity {
 		tvFilePath.setError(null);
 
 		// Get the info from the form (either text or file)
-		if (rgDataType.getCheckedRadioButtonId() == R.id.typeTextAdvanced) {
+		if (rgDataType.getCheckedRadioButtonId() == R.id.typeTextIntermediate) {
 			data = edtData.getText().toString();
-		} else if (rgDataType.getCheckedRadioButtonId() == R.id.typeFileAdvanced) {
+		} else if (rgDataType.getCheckedRadioButtonId() == R.id.typeFileIntermediate) {
 			data = tvFilePath.getText().toString();
 		} else {
 			// Unknown id, so exit the function
@@ -432,13 +391,13 @@ public class AdvancedActivity extends Activity {
 		// Check to see if the form is empty
 		if (TextUtils.isEmpty(data)) {
 			// If the EditText is empty, set error
-			if (rgDataType.getCheckedRadioButtonId() == R.id.typeTextAdvanced) {
+			if (rgDataType.getCheckedRadioButtonId() == R.id.typeTextIntermediate) {
 				edtData.setError(getString(R.string.error_field_required));
 				focusView = edtData;
 			}
 
 			// else if File path is empty, set error
-			else if (rgDataType.getCheckedRadioButtonId() == R.id.typeFileAdvanced) {
+			else if (rgDataType.getCheckedRadioButtonId() == R.id.typeFileIntermediate) {
 				tvFilePath.setError(getString(R.string.error_field_required));
 				focusView = tvFilePath;
 			}
@@ -548,7 +507,7 @@ public class AdvancedActivity extends Activity {
 	
 	private void stopWebService() {
 		// Stop the WebServerService
-		Intent intent = new Intent(AdvancedActivity.this,
+		Intent intent = new Intent(IntermediateActivity.this,
 				WebServerService.class);
 		stopService(intent);
 	}
@@ -574,7 +533,7 @@ public class AdvancedActivity extends Activity {
 		protected void onPreExecute() {
 			formView.setVisibility(View.GONE); // hide the forms
 			statusView.setVisibility(View.VISIBLE); // show the progress
-			alertDialog = new AlertDialog.Builder(AdvancedActivity.this)
+			alertDialog = new AlertDialog.Builder(IntermediateActivity.this)
 					.create();
 			alertDialog.setTitle(getString(R.string.alertDialogTitle));
 			alertDialog.setCancelable(true);
@@ -595,13 +554,13 @@ public class AdvancedActivity extends Activity {
 		protected String doInBackground(Void... params) {
 			// Create a new SecureRequest and set the user level as beginner
 			SecureRequest sr = new SecureRequest();
-			sr.setUserLevel(SecureRequest.USER_LEVEL_ADVANCED);
+			sr.setUserLevel(SecureRequest.USER_LEVEL_INTERMEDIATE);
 
 			// Get the info from the forms
-			if (rgDataType.getCheckedRadioButtonId() == R.id.typeTextAdvanced) {
+			if (rgDataType.getCheckedRadioButtonId() == R.id.typeTextIntermediate) {
 				sr.setContentType(SecureRequest.TYPE_TEXT);
 				sr.setContent(edtData.getText().toString().getBytes());
-			} else if (rgDataType.getCheckedRadioButtonId() == R.id.typeFileAdvanced) {
+			} else if (rgDataType.getCheckedRadioButtonId() == R.id.typeFileIntermediate) {
 				try {
 					sr.setContentType(SecureRequest.TYPE_FILE);
 					sr.setContent(new File(tvFilePath.getText().toString()));
@@ -627,41 +586,10 @@ public class AdvancedActivity extends Activity {
 				
 				// Get the Security properties to be applied and set them to the
 				// Security Preferences
-
-				// If the Confidentiality is checked, put it along with its algorithm
-				if (chkConfidentiality.isChecked()) {
-					sr.setConfidentiality(true, spinnerConfidentialityAlgorithms
-									.getSelectedItem().toString());
-				}
-				else {
-					sr.setConfidentiality(false);
-				}
-
-				// If the Authenticity is checked, put it along with its algorithm
-				if (chkAuthenticity.isChecked()) {
-					sr.setAuthenticity(true, spinnerAuthenticityAlgorithms
-							.getSelectedItem().toString());
-				}
-				else {
-					sr.setAuthenticity(false);
-				}
-
-				// If the Integrity is checked, put it along with its algorithm
-				if (chkIntegrity.isChecked()) {
-					sr.setIntegrity(true, spinnerIntegrityAlgorithms
-							.getSelectedItem().toString());
-				}
-				else {
-					sr.setIntegrity(false);
-				}
-				
-				// If the Non Repudiation is checked, put it
-				if (chkNonRepudiation.isChecked()) {
-					sr.setNonRepudiation(true);
-				}
-				else {
-					sr.setNonRepudiation(false);
-				}
+				sr.setConfidentiality(chkConfidentiality.isChecked());
+				sr.setAuthenticity(chkAuthenticity.isChecked());
+				sr.setIntegrity(chkIntegrity.isChecked());
+				sr.setNonRepudiation(chkNonRepudiation.isChecked());
 			}
 
 			try {

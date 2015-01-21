@@ -91,7 +91,7 @@ public class BeginnerActivity extends Activity {
 	
 	private int state=0;
 	
-	String[] states={"Hangouts","WhatsApp","Facebook","HTTP"};
+	String[] states={"Hangouts","Browser","Facebook","HTTP"};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

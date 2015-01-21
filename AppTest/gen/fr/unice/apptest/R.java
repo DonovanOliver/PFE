@@ -54,6 +54,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int btnAutomaticBeginner=0x7f0b0036;
         public static final int btnAutomaticIntermediate=0x7f0b0055;
         public static final int btnBeginner=0x7f0b006a;
+        public static final int btnBrowser=0x7f0b0026;
         public static final int btnExit=0x7f0b0029;
         public static final int btnFacebook=0x7f0b0027;
         public static final int btnHTTP=0x7f0b0028;
@@ -66,7 +67,6 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int btnSendBeginner=0x7f0b0042;
         public static final int btnSendIntermediate=0x7f0b0063;
         public static final int btnSettings=0x7f0b006d;
-        public static final int btnWhatsApp=0x7f0b0026;
         public static final int chkAuthenticityAdvanced=0x7f0b0018;
         public static final int chkAuthenticityIntermediate=0x7f0b0060;
         public static final int chkConfidentialityAdvanced=0x7f0b0016;
@@ -173,6 +173,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int main=0x7f0a0000;
     }
     public static final class string {
+        public static final int Browser=0x7f070030;
         public static final int Facebook=0x7f07002e;
         public static final int HTTP=0x7f07002f;
         public static final int Hangouts=0x7f07002c;
