@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -65,6 +66,8 @@ public class AdvancedActivity extends Activity {
 	
 	private Documents documents;
 
+	private XML xml;
+
 	/**
 	 * Used to retrieve user preferences
 	 */
@@ -72,6 +75,10 @@ public class AdvancedActivity extends Activity {
 
 	private static final int ACTIVITY_CHOOSE_FILE = 1;
 	private static final int ACTIVITY_SELECT_CONTACT = 2;
+	
+	private int state=0;
+	
+	String[] states={"Hangouts","WhatsApp","Facebook","HTTP"};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,12 +86,26 @@ public class AdvancedActivity extends Activity {
 		setContentView(R.layout.activity_advanced);
 		
 		documents=new Documents(this);
-
-		if(documents.loadStrings("configAdvanced.txt")==null){
-			documents.saveStrings("configAdvanced.txt",new String[]{"127.0.0.1","8002","0","hello world!","true","false","false","false"});
+		
+		state=getIntent().getIntExtra("state", 0);
+		
+		xml=new XML(documents,"data.xml");
+		xml.addGetChild(states[state]);
+		if(!xml.isChild("advanced")){
+			xml.addGetChild("advanced");
+			xml.add("ip","127.0.0.1");
+			xml.add("port","8002");
+			xml.add("target","0");
+			xml.add("text","hello world!");
+			xml.add("confidentiality","true");
+			xml.add("authenticity","false");
+			xml.add("integrity","false");
+			xml.add("non-repudiation","false");
+		}
+		else{
+			xml.addGetChild("advanced");
 		}
 		
-		int state=getIntent().getIntExtra("state", 0);
 		
 		// Get a Shared Preferences instance to get the user preferences
 		prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -106,7 +127,7 @@ public class AdvancedActivity extends Activity {
 
 		// References to views from within the formView
 		edtData = (EditText) findViewById(R.id.edtDataAdvanced);
-		edtData.setText(documents.loadStrings("configIntermediate.txt")[3]);
+		edtData.setText(xml.getValue("text"));
 		if(state!=3){edtData.setVisibility(View.GONE);}
 		chkConfidentiality = (CheckBox) findViewById(R.id.chkConfidentialityAdvanced);
 		chkAuthenticity = (CheckBox) findViewById(R.id.chkAuthenticityAdvanced);
@@ -116,27 +137,27 @@ public class AdvancedActivity extends Activity {
 		spinnerAuthenticityAlgorithms = (Spinner) findViewById(R.id.spAuthenticityAlgorithmsAdvanced);
 		spinnerIntegrityAlgorithms = (Spinner) findViewById(R.id.spIntegrityAlgorithmsAdvanced);
 		btnSend = (Button) findViewById(R.id.btnSendAdvanced);
-		if(state!=3){btnSend.setText("Save");}
+		if(state!=3){btnSend.setText("Save");} 
 		
-		if(documents.loadStrings("configIntermediate.txt")[4].equals("true")){
+		if(xml.getValue("confidentiality").equals("true")){
 			chkConfidentiality.setChecked(true);
 		}
-		if(documents.loadStrings("configIntermediate.txt")[5].equals("true")){
+		if(xml.getValue("authenticity").equals("true")){
 			chkAuthenticity.setChecked(true);
 		}
-		if(documents.loadStrings("configIntermediate.txt")[6].equals("true")){
+		if(xml.getValue("integrity").equals("true")){
 			chkIntegrity.setChecked(true);
 		}
-		if(documents.loadStrings("configIntermediate.txt")[7].equals("true")){
+		if(xml.getValue("non-repudiation").equals("true")){
 			chkNonRepudiation.setChecked(true);
 		}
 		
 		btnAutomatic = (Button) findViewById(R.id.btnAutomaticAdvanced);
 		edtDestinationIP = (EditText) findViewById(R.id.edtDestinationIPAdvanced);
-		edtDestinationIP.setText(documents.loadStrings("configIntermediate.txt")[0]);
+		edtDestinationIP.setText(xml.getValue("ip"));
 		if(state!=3){edtDestinationIP.setVisibility(View.GONE);}
 		edtDestinationPort = (EditText) findViewById(R.id.edtDestinationPortAdvanced);
-		edtDestinationPort.setText(documents.loadStrings("configIntermediate.txt")[1]);
+		edtDestinationPort.setText(xml.getValue("port"));
 		if(state!=3){edtDestinationPort.setVisibility(View.GONE);}
 
 		// References to fileTypeViewAdvanced
@@ -247,10 +268,17 @@ public class AdvancedActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				documents.saveStrings("configAdvanced.txt", new String[]{edtDestinationIP.getText().toString(),edtDestinationPort.getText().toString(),
-						""+rgDestinationMode.getId(),edtData.getText().toString(),""+chkConfidentiality.isChecked(),""+chkAuthenticity.isChecked(),
-						""+chkIntegrity.isChecked(),""+chkNonRepudiation.isChecked()});
-				attemptSend();
+				xml.setValue("ip", edtDestinationIP.getText().toString());
+				xml.setValue("port", edtDestinationPort.getText().toString());
+				xml.setValue("text", edtData.getText().toString());
+				xml.setValue("confidentiality", ""+chkConfidentiality.isChecked());
+				xml.setValue("authenticity", ""+chkAuthenticity.isChecked());
+				xml.setValue("integrity", ""+chkIntegrity.isChecked());
+				xml.setValue("non-repudiation", ""+chkNonRepudiation.isChecked());
+				
+				Log.i("data",xml.toData());
+				xml.save();
+				if(state==3){attemptSend();}
 
 			}
 		});

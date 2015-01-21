@@ -1,7 +1,18 @@
 package fr.unice.apptest.activities;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 
 
@@ -37,6 +48,9 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import org.xml.sax.Attributes;
+import org.xmlpull.v1.XmlPullParserException;
+
 /**
  *  This Activity is responsible with taking the data from the forms and sending it along
  * with the Security Level and Data Type that was selected.
@@ -65,6 +79,8 @@ public class BeginnerActivity extends Activity {
 	
 	private Documents documents;
 	
+	private XML xml;
+	
 	/**
 	 * Used to retrieve user preferences
 	 */
@@ -72,6 +88,10 @@ public class BeginnerActivity extends Activity {
 	
 	private static final int ACTIVITY_CHOOSE_FILE = 1;
 	private static final int ACTIVITY_SELECT_CONTACT = 2;
+	
+	private int state=0;
+	
+	String[] states={"Hangouts","WhatsApp","Facebook","HTTP"};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,12 +99,23 @@ public class BeginnerActivity extends Activity {
 		setContentView(R.layout.activity_beginner);
 		
 		documents=new Documents(this);
-		
-		if(documents.loadStrings("configBeginner.txt")==null){
-			documents.saveStrings("configBeginner.txt",new String[]{"127.0.0.1","8002","0","hello world!","0","0"});
-		}
 
-		int state=getIntent().getIntExtra("state", 0);
+		state=getIntent().getIntExtra("state", 0);
+		
+		xml=new XML(documents,"data.xml");
+		xml.addGetChild(states[state]);
+		if(!xml.isChild("beginner")){
+			xml.addGetChild("beginner");
+			xml.add("ip","127.0.0.1");
+			xml.add("port","8002");
+			xml.add("target","0");
+			xml.add("text","hello world!");
+			xml.add("type","0");
+			xml.add("level","0");
+		}
+		else{
+			xml.addGetChild("beginner");
+		}
 		
 		// Get a Shared Preferences instance to get the user preferences
 		prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -107,21 +138,22 @@ public class BeginnerActivity extends Activity {
 		
 		// References to views from within the formView
 		edtData = (EditText) findViewById(R.id.edtDataBeginner);
-		edtData.setText(documents.loadStrings("configBeginner.txt")[3]);
+		edtData.setText(xml.getValue("text"));
 		if(state!=3){edtData.setVisibility(View.GONE);}
 		spinnerLevel = (Spinner) findViewById(R.id.spLevelBeginner);
-		spinnerLevel.setId(Integer.parseInt(documents.loadStrings("configBeginner.txt")[4]));
+		spinnerLevel.setId(xml.getInt("level"));
+		
 		spinnerType = (Spinner) findViewById(R.id.spTypeBeginner);
-		spinnerType.setId(Integer.parseInt(documents.loadStrings("configBeginner.txt")[5]));
+		spinnerType.setId(xml.getInt("type"));
 		btnSend = (Button) findViewById(R.id.btnSendBeginner);
 		if(state!=3){btnSend.setText("Save");}
 		
 		btnAutomatic = (Button) findViewById(R.id.btnAutomaticBeginner);
 		edtDestinationIP = (EditText) findViewById(R.id.edtDestinationIPBeginner);
-		edtDestinationIP.setText(documents.loadStrings("configBeginner.txt")[0]);
+		edtDestinationIP.setText(xml.getValue("ip"));
 		if(state!=3){edtDestinationIP.setVisibility(View.GONE);}
 		edtDestinationPort = (EditText) findViewById(R.id.edtDestinationPortBeginner);
-		edtDestinationPort.setText(documents.loadStrings("configBeginner.txt")[1]);
+		edtDestinationPort.setText(xml.getValue("port"));
 		if(state!=3){edtDestinationPort.setVisibility(View.GONE);}
 		
 		// References to fileTypeViewBeginner
@@ -131,7 +163,7 @@ public class BeginnerActivity extends Activity {
 		rgDataType = (RadioGroup) findViewById(R.id.rgDataTypeBeginner);
 		if(state!=3){rgDataType.setVisibility(View.GONE);}
 		rgDestinationMode = (RadioGroup) findViewById(R.id.rgDestinationEnterModeBeginner);
-		rgDestinationMode.check(Integer.parseInt(documents.loadStrings("configBeginner.txt")[2]));
+		rgDestinationMode.check(xml.getInt("target"));
 		if(state!=3){rgDestinationMode.setVisibility(View.GONE);}
 		
 		ivSecurity = (ImageView) findViewById(R.id.ivSecurityBeginner);
@@ -261,9 +293,13 @@ public class BeginnerActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				documents.saveStrings("configBeginner.txt", new String[]{edtDestinationIP.getText().toString(),edtDestinationPort.getText().toString(),
-																""+rgDestinationMode.getId(),edtData.getText().toString(),""+spinnerLevel.getId(),""+spinnerType.getId()});
-				attemptSend();
+				xml.setValue("ip", edtDestinationIP.getText().toString());
+				xml.setValue("port", edtDestinationPort.getText().toString());
+				xml.setValue("text", edtData.getText().toString());
+				
+				Log.i("data",xml.toData());
+				xml.save();
+				if(state==3){attemptSend();}
 			}
 		});
 	}
