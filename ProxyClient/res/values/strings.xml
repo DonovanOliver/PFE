@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="title_activity_preferences">Settings</string>
+    <string name="app_name">Proxy</string>
+    <string name="menu_action_settings">Settings</string>
+    <string name="menu_action_quit">Quit</string>
+    <string name="title">Proxy</string>
+    <string name="btnStart">Start proxy</string>
+    <string name="btnStop">Stop proxy</string>
+    <string name="edtPort">Port number</string>
+    <string name="startProxyClientService">Proxy running</string>
+    <string name="stopProxyClientService">Proxy stopped</string>
+    <string name="portNumberInvalid">Please enter a valid port number</string>
+    <string name="connexion_process">Establishing secure connexion. \n This may take a long time&#8230;</string>
+    
+    
+    
+</resources>

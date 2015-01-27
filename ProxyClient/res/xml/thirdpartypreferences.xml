@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="useThirdParty"
+        android:summary="Check this for encrypting/decrypting on a third-party server"
+        android:title="Use third-party server" />
+
+    <EditTextPreference
+        android:dependency="useThirdParty"
+        android:defaultValue="192.168.1.93"
+        android:key="dedicatedServerAddress"
+        android:maxLines="1"
+        android:title="Dedicated Server Address" />
+    
+    <EditTextPreference
+        android:dependency="useThirdParty"
+        android:defaultValue="8004"
+        android:key="dedicatedServerPort"
+        android:maxLines="1"
+        android:title="Dedicated Server Port Number" />
+
+</PreferenceScreen>
