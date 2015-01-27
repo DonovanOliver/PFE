@@ -1,0 +1,101 @@
+package fr.unice.apptest;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import fr.unice.apptest.R;
+import fr.unice.apptest.webserver.ContextManager;
+
+/**
+ * Public class Activity representing the main entrance of the program. This
+ * means that when you start the Application, this is the Activity that will
+ * show first.
+ * 
+ * @author andrei
+ * 
+ */
+public class AppActivity extends Activity {
+
+	Button btnHangouts, btnWhatsApp, btnFacebook, btnHTTP, btnExit;
+
+	/**
+	 * This is the first method that is called when the Activity starts.
+	 */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_app);
+		
+		ContextManager cm = ContextManager.getInstance();
+		cm.setContext(AppActivity.this);
+
+		// Get the references to the UI buttons
+		btnHangouts = (Button) findViewById(R.id.btnHangouts);
+		btnWhatsApp = (Button) findViewById(R.id.btnWhatsApp);
+		btnFacebook = (Button) findViewById(R.id.btnFacebook);
+		btnHTTP = (Button) findViewById(R.id.btnHTTP);
+		btnExit = (Button) findViewById(R.id.btnExit);
+
+		// When the btnBeginner button is clicked
+		btnHangouts.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getBaseContext(),
+						MainActivity.class);
+				intent.putExtra("state", 0);
+				startActivity(intent);
+			}
+		});
+
+		// When the btnIntermediate button is clicked
+		btnWhatsApp.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getBaseContext(),
+						MainActivity.class);
+				intent.putExtra("state", 1);
+				startActivity(intent);
+
+			}
+		});
+
+		// When the btnAdvanced button is clicked
+		btnFacebook.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getBaseContext(),
+						MainActivity.class);
+				intent.putExtra("state", 2);
+				startActivity(intent);
+
+			}
+		});
+
+		// When the btnSettings button is clicked
+		btnHTTP.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getBaseContext(),
+						MainActivity.class);
+				intent.putExtra("state", 3);
+				startActivity(intent);
+
+			}
+		});
+
+		// When the btnExit button is clicked
+		btnExit.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
+	}
+}
