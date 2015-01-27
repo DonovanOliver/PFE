@@ -36,14 +36,14 @@ public class ProxyManger {
     public static synchronized void input(String raw) {
     	 //Log.i("myapps","--->  "+ raw);
     	String filtered = Filters.processClient(raw);
-		//outputSocket.write(filtered);
+		outputSocket.write(filtered);
 		debug("client", raw, filtered);
     }
 
     public static synchronized void output(String raw) {
         String filtered = Filters.processServer(raw);
-        inputSocket.write(filtered);
         debug("server", raw, filtered);
+        inputSocket.write(filtered);
     }
 
     public static synchronized void debug(String type, String raw, String filtered) {
@@ -54,7 +54,7 @@ public class ProxyManger {
 		     output += "[" + type + "(r)]\n" + raw;
 		 }
 		 output += "\n[" + type + "]\n" + filtered + "\n";
-		 //appendLog(output);
+		 appendLog(output);
 		
      }
 

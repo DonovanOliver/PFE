@@ -23,7 +23,7 @@ public class SecureMessage implements IFFilter{
 
 	    public String process(String data) {
 	    	 //Log.i("myapps","--->  "+ data);
-	     	if (data.startsWith("<message to=") && (data.contains("from=")) && (data.contains("<body>"))) {
+	     	if (data.startsWith("<message") && (data.contains("from=")) && (data.contains("to=")) && (data.contains("<body>"))) {
 	    	
 	            Log.i("myapps","It is a message of the server ");
 	        	return processServer(data);
@@ -36,8 +36,12 @@ public class SecureMessage implements IFFilter{
 
 	    private String processServer(String data) {
 	        String regex = "(?=<body>).*(?<=</body>)";
-	        String message = data.substring(data.lastIndexOf("<body>"),data.indexOf("</body>"));
-	        String plain = "<body>"+DecryptBody(message)+"</body>";
+	        String message = data.substring(data.lastIndexOf("<body>")+6,data.indexOf("</body>"));
+	        Log.i("myapps","String is %s \n\n"+message);
+	        String MessAlter =  message.replaceAll("\"content\"", "\\\\\"content\\\\\"");
+	        Log.i("myapps","String Modified is %s \n"+MessAlter);
+	        String plain = DecryptBody(MessAlter)+"</body>";
+	        Log.i("myapps","The message decrypted from the server %s "+plain);
 	        return data.replaceAll(regex, plain);
 	    }
 
@@ -156,12 +160,12 @@ public class SecureMessage implements IFFilter{
 			RequestManager requestManager = new RequestManager();
 			Gson gson = new Gson();
 			SecureDirectConnection sdc = SecureDirectConnection.getInstance();
-			
+			Log.i("myapps","Break point 1 %s "+recievedbody);
 			// Get the first header's value of Action in order to see what we must do with this request
 			//"Decrypt" 
 
 			RequestStructure SecStruc = gson.fromJson(recievedbody, RequestStructure.class);
-				
+			Log.i("myapps","Break point 2");	
 				/*if (SecStruc.getSecurityPreferences().isIntegrity() && !SecStruc.getSecurityPreferences().isAuthenticity()) {
 					Log.i("Integrity", "Starting Integrity");
 					// Get the header that contains the Integrity and decode it from Base64
@@ -187,14 +191,14 @@ public class SecureMessage implements IFFilter{
 				
 				// Get the Object from the serialized content
 				SerialData sd = gson.fromJson(SecStruc.getcryptedmsj(), SerialData.class);
-				
+				Log.i("myapps","Break point 3");	
 				byte[] originalText = null;
 				try {
 					originalText = requestManager.getClear(sd, SecStruc.getSecurityPreferences());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
+				Log.i("myapps","Break point 4");
 				if (originalText == null) {
 					// Send back an error message to indicate that something went wrong during decryption
 					//entityResponse = new StringEntity("Error! Something went wrong during the decryption/signature verifying process. Please try again later.", HTTP.UTF_8);

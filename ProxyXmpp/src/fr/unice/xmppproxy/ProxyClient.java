@@ -62,14 +62,13 @@ public class ProxyClient implements Runnable {
                 	if (bytes<maxbytes) {
                         b = Arrays.copyOf(b, bytes);
                         readedData += new String(b);
-                        Log.d("myapps","[InputSocket > run ] "+readedData);    
-                        /*if  (XMLcheck(readedData) == 0)
+                        //Log.d("myapps","[InputSocket > run ] debug "+readedData);    
+                        if  (XMLcheck(readedData) == 0)
                         	{
                         	  // Log.d("myapps",ANSI_RED + readedData + ANSI_RESET);
                         	 	continue;
                         	}
-                        		*/
-                        		
+                       
                         ProxyManger.input(readedData);
                         
                     } else {

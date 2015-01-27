@@ -35,16 +35,18 @@ public class Credentials implements IFFilter {
             String user = "", password = "";
             byte[] auth = Base64.decode(FormatData.format(data, ">", "</auth>"));
 
-            boolean passwd = false;
-            for (int i=1; i<auth.length; i++) {
-                if (auth[i] == 0) { passwd = true; continue; }
-                if (!passwd) user += new String(new byte[]{auth[i]});
-                else password += new String(new byte[]{auth[i]});
+            
+            
+            int passwd = 0;
+            for (int i=1; i<auth.length ; i++) 
+            {
+                if (auth[i] == 0) {passwd = passwd+1; continue; }
+                if (passwd == 1) user += new String(new byte[]{auth[i]});
+                if (passwd == 2)
+                password += new String(new byte[]{auth[i]});
             }
-            user="xmppoilt@gmail.com";
-            password="azerty63";
-            //System.out.println("[Filter > Credentials] mot de passe , " +password+" User :"+user);
-                    
+            Log.i("myapps","[Filter > Credentials] mot de passe , #" +password+"# User :#"+user+"#");
+
             String url = "https://www.google.com/accounts/ClientLogin?" +
                     "accountType=GOOGLE&Email=" + user + "&Passwd=" +
                     password + "&service=mail";

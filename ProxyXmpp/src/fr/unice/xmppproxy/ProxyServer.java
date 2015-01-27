@@ -60,7 +60,7 @@ public class ProxyServer implements Runnable {
              java.util.logging.Logger.getLogger(ProxyServer.class.getName()).log(
                     java.util.logging.Level.SEVERE, null, ex);
             Log.d("myapps","[OutputSocket > run] " +
-                    "Exception " + ex.getClass().getSimpleName() + " launched");
+                    "Exception " + ex );
         } finally {
             ProxyManger.exit();
         }
