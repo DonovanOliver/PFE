@@ -78,7 +78,7 @@ public class AdvancedActivity extends Activity {
 	
 	private int state=0;
 	
-	String[] states={"Hangouts","WhatsApp","Facebook","HTTP"};
+	String[] states={"Hangouts","Browser","HTTP"};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

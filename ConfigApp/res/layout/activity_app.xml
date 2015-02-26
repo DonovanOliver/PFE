@@ -9,8 +9,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/title_welcome"
         android:layout_margin="10dp"
+        android:text="@string/title_welcome2"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <Button
@@ -29,15 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="10dp"
-        android:text="@string/WhatsApp" />
-
-    <Button
-        android:id="@+id/btnFacebook"
-        style="@style/btnStyleMainActivity"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="@string/Facebook" />
+        android:text="@string/Browser2" />
 
     <Button
         android:id="@+id/btnHTTP"

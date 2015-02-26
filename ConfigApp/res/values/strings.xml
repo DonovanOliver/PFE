@@ -88,5 +88,8 @@
         <string name="WhatsApp">WhatsApp</string>
         <string name="Facebook">Facebook</string>
         <string name="HTTP">HTTP</string>
+        <string name="Browser"></string>
+        <string name="Browser2">Browser</string>
+        <string name="title_welcome2">Welcome to ConfApp</string>
 
 </resources>

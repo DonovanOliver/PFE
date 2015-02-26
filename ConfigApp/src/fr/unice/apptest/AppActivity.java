@@ -19,7 +19,7 @@ import fr.unice.apptest.webserver.ContextManager;
  */
 public class AppActivity extends Activity {
 
-	Button btnHangouts, btnWhatsApp, btnFacebook, btnHTTP, btnExit;
+	Button btnHangouts, btnWhatsApp, btnHTTP, btnExit;
 
 	/**
 	 * This is the first method that is called when the Activity starts.
@@ -35,7 +35,6 @@ public class AppActivity extends Activity {
 		// Get the references to the UI buttons
 		btnHangouts = (Button) findViewById(R.id.btnHangouts);
 		btnWhatsApp = (Button) findViewById(R.id.btnWhatsApp);
-		btnFacebook = (Button) findViewById(R.id.btnFacebook);
 		btnHTTP = (Button) findViewById(R.id.btnHTTP);
 		btnExit = (Button) findViewById(R.id.btnExit);
 
@@ -64,19 +63,6 @@ public class AppActivity extends Activity {
 			}
 		});
 
-		// When the btnAdvanced button is clicked
-		btnFacebook.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(getBaseContext(),
-						MainActivity.class);
-				intent.putExtra("state", 2);
-				startActivity(intent);
-
-			}
-		});
-
 		// When the btnSettings button is clicked
 		btnHTTP.setOnClickListener(new OnClickListener() {
 
@@ -84,7 +70,7 @@ public class AppActivity extends Activity {
 			public void onClick(View v) {
 				Intent intent = new Intent(getBaseContext(),
 						MainActivity.class);
-				intent.putExtra("state", 3);
+				intent.putExtra("state", 2);
 				startActivity(intent);
 
 			}

@@ -36,7 +36,7 @@ public class MainActivity extends Activity {
 	
 	int state=0;
 	
-	String[] states={"Hangouts","WhatsApp","Facebook","HTTP"};
+	String[] states={"Hangouts","Browser","HTTP"};
 	
 	Context context;
 
